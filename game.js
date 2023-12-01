@@ -4,6 +4,7 @@
 
 const buttonColors = ["red", "blue", "green", "yellow"];
 const gamePattern = [];
+const userClickedPattern = [];
 
 
 const nextSequence = () => {
@@ -42,6 +43,36 @@ const animateColor = (color) => {
     $(`#${color}`).fadeOut(0.001).fadeIn();
 
 }
+
+
+const animatePress = (currentColor) => {
+
+    // add class "pressed"
+   $(`.btn.${currentColor}`).addClass("pressed");
+
+    // removed class pressed to create click animation
+   setTimeout(() => {
+    $(`.btn.${currentColor}`).removeClass("pressed");
+   }, 100)
+
+}
+
+
+
+// When button clicked we get id and push into userClickedPattern array
+
+$(".btn").on("click", function(event){
+
+    // storing id 
+    let userChosenColor = event.target.id;
+
+    userClickedPattern.push(userChosenColor);
+
+    animatePress(userChosenColor);
+
+    playSound(userChosenColor);
+
+})
 
 
 nextSequence();
