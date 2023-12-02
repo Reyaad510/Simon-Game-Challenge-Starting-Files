@@ -5,10 +5,15 @@
 const buttonColors = ["red", "blue", "green", "yellow"];
 const gamePattern = [];
 const userClickedPattern = [];
-
+let gameStart = false;
+let level = 0;
 
 const nextSequence = () => {
 
+    // increase level by 1 everytime nextSequence called and update title
+    level++;
+    $("h1").text(`Level: ${level}`);
+   
     // Random number between 0 and 3
     let randomNumber = Math.floor(Math.random() * 4);
 
@@ -75,6 +80,23 @@ $(".btn").on("click", function(event){
 })
 
 
-nextSequence();
+// Use jQuery to detect when keyboard key has been pressed, when happens first time call nextSequence();
+
+$("body").keydown(function(event){
+
+    if(!gameStart){
+
+        $("h1").text(`Level: ${level}`);
+        nextSequence();
+        gameStart = true;
+
+    }
+})
+
+
+
+
+
+
 
 
