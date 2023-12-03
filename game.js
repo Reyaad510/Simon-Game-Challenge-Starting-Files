@@ -4,7 +4,7 @@
 
 const buttonColors = ["red", "blue", "green", "yellow"];
 const gamePattern = [];
-const userClickedPattern = [];
+let userClickedPattern = [];
 let gameStart = false;
 let level = 0;
 
@@ -28,6 +28,8 @@ const nextSequence = () => {
     // Pushing random color to end of gamePattern array
     gamePattern.push(randomChosenColor);
     console.log(gamePattern);
+ 
+
 
 }
 
@@ -66,18 +68,30 @@ const animatePress = (currentColor) => {
 
 // When button clicked we get id and push into userClickedPattern array
 
-$(".btn").on("click", function(event){
 
-    // storing id 
-    let userChosenColor = event.target.id;
+const clickColor = () => {
+   
+    if(gameStart){
+    $(".btn").on("click", function(event){
 
-    userClickedPattern.push(userChosenColor);
+        // storing id 
+        let userChosenColor = event.target.id;
+        let userChosenColorLastIndex = userClickedPattern.length;
 
-    animatePress(userChosenColor);
+        userClickedPattern.push(userChosenColor);
 
-    playSound(userChosenColor);
+        animatePress(userChosenColor);
+
+        playSound(userChosenColor);
+
+        if(gamePattern.length == userClickedPattern.length){
+            
+        checkAnswer(userChosenColorLastIndex);
+    }
 
 })
+}
+}
 
 
 // Use jQuery to detect when keyboard key has been pressed, when happens first time call nextSequence();
@@ -89,9 +103,31 @@ $("body").keydown(function(event){
         $("h1").text(`Level: ${level}`);
         nextSequence();
         gameStart = true;
+        clickColor();
+
 
     }
 })
+
+
+checkAnswer = (currentLevel) => {
+    
+    console.log(userClickedPattern[currentLevel]);
+    console.log(gamePattern[level - 1]);
+
+    if(userClickedPattern[currentLevel] == gamePattern[level - 1]){
+
+         nextSequence();
+         userClickedPattern = [];
+
+    } else {
+
+        console.log("Game Over!");
+
+    }
+    
+
+}
 
 
 
