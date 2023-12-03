@@ -28,6 +28,7 @@ const nextSequence = () => {
     // Pushing random color to end of gamePattern array
     gamePattern.push(randomChosenColor);
     console.log(gamePattern);
+    console.log(userClickedPattern)
  
 
 
@@ -70,6 +71,8 @@ const animatePress = (currentColor) => {
 
 
 const clickColor = () => {
+
+    console.log(gameStart);
    
     if(gameStart){
     $(".btn").on("click", function(event){
@@ -85,8 +88,9 @@ const clickColor = () => {
         playSound(userChosenColor);
 
         if(gamePattern.length == userClickedPattern.length){
-            
+
         checkAnswer(userChosenColorLastIndex);
+
     }
 
 })
@@ -110,19 +114,30 @@ $("body").keydown(function(event){
 })
 
 
+
 checkAnswer = (currentLevel) => {
     
     console.log(userClickedPattern[currentLevel]);
     console.log(gamePattern[level - 1]);
 
+    // Compare last index of arrays to see if pattern is correct
     if(userClickedPattern[currentLevel] == gamePattern[level - 1]){
 
          nextSequence();
          userClickedPattern = [];
 
     } else {
+        gameStart = false;
 
-        console.log("Game Over!");
+        $("h1").text("Game Over, Press Any Key To Restart");
+
+        playSound("wrong");
+
+        $("body").addClass("game-over")
+        setTimeout(() => {
+            $("body").removeClass("game-over");
+           }, 200)
+
 
     }
     
