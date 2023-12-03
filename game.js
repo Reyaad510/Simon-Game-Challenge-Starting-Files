@@ -3,16 +3,19 @@
 
 
 const buttonColors = ["red", "blue", "green", "yellow"];
-const gamePattern = [];
+let gamePattern = [];
 let userClickedPattern = [];
 let gameStart = false;
 let level = 0;
+let num = 0;
 
 const nextSequence = () => {
 
     // increase level by 1 everytime nextSequence called and update title
     level++;
     $("h1").text(`Level: ${level}`);
+
+    userClickedPattern = [];
    
     // Random number between 0 and 3
     let randomNumber = Math.floor(Math.random() * 4);
@@ -27,9 +30,6 @@ const nextSequence = () => {
 
     // Pushing random color to end of gamePattern array
     gamePattern.push(randomChosenColor);
-    console.log(gamePattern);
-    console.log(userClickedPattern)
- 
 
 
 }
@@ -67,14 +67,26 @@ const animatePress = (currentColor) => {
 
 
 
+
+
+// Use jQuery to detect when keyboard key has been pressed, when happens first time call nextSequence();
+
+$("body").keydown(function(event){
+
+    if(!gameStart){
+
+        $("h1").text(`Level: ${level}`);
+        gameStart = true;
+        nextSequence(); 
+    }
+})
+
+
+
+
 // When button clicked we get id and push into userClickedPattern array
 
 
-const clickColor = () => {
-
-    console.log(gameStart);
-   
-    if(gameStart){
     $(".btn").on("click", function(event){
 
         // storing id 
@@ -87,6 +99,11 @@ const clickColor = () => {
 
         playSound(userChosenColor);
 
+        console.log("click user", userClickedPattern);
+
+        num++;
+        console.log(num);
+
         if(gamePattern.length == userClickedPattern.length){
 
         checkAnswer(userChosenColorLastIndex);
@@ -94,49 +111,40 @@ const clickColor = () => {
     }
 
 })
+
+
+
+const gameOver = () => {
+
+    level = 0;
+    gamePattern = [];
+    gameStart = false;
+
+    $("h1").text("Game Over, Press Any Key To Restart");
+
+    playSound("wrong");
+
+    $("body").addClass("game-over")
+    setTimeout(() => {
+        $("body").removeClass("game-over");
+       }, 200)
+
 }
-}
-
-
-// Use jQuery to detect when keyboard key has been pressed, when happens first time call nextSequence();
-
-$("body").keydown(function(event){
-
-    if(!gameStart){
-
-        $("h1").text(`Level: ${level}`);
-        nextSequence();
-        gameStart = true;
-        clickColor();
-
-
-    }
-})
 
 
 
 checkAnswer = (currentLevel) => {
     
-    console.log(userClickedPattern[currentLevel]);
-    console.log(gamePattern[level - 1]);
+
 
     // Compare last index of arrays to see if pattern is correct
     if(userClickedPattern[currentLevel] == gamePattern[level - 1]){
 
          nextSequence();
-         userClickedPattern = [];
 
     } else {
-        gameStart = false;
 
-        $("h1").text("Game Over, Press Any Key To Restart");
-
-        playSound("wrong");
-
-        $("body").addClass("game-over")
-        setTimeout(() => {
-            $("body").removeClass("game-over");
-           }, 200)
+        gameOver();
 
 
     }
